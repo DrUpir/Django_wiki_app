@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from markdown2 import markdown
 
 from . import util
 
@@ -9,7 +10,12 @@ def index(request):
     })
 
 def entry(request, title):
+    md_content = util.get_entry(title)
+    if not md_content:
+        md_content = f'##**"{title}"** entry doesn\'t exist'
+    
     return render(request, "encyclopedia/entry.html", {
-        "title": title
+        "title": title,
+        "entry_html_content": markdown(md_content)
     })
 
