@@ -10,7 +10,6 @@ def index(request):
     })
 
 def entry(request, title):
-
     entry_md_content = util.get_entry(title)
     if not entry_md_content:
         entry_md_content = f"##**{title}** entry doesn't exist"
@@ -18,4 +17,3 @@ def entry(request, title):
         "title": title,
         "entry_html_content": markdown(entry_md_content)
     })
-
