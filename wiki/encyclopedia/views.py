@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from markdown2 import markdown
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 from . import util
 
@@ -17,3 +19,9 @@ def entry(request, title):
         "title": title,
         "entry_html_content": markdown(entry_md_content)
     })
+
+def search(request):
+    if request.method == "GET" and request.GET.get("q"):
+        return HttpResponseRedirect(reverse("entry", kwargs={'title': request.GET.get("q")}))
+    return HttpResponseNotFound('<h1>Error in search view</h1>')
+   
