@@ -10,12 +10,12 @@ def index(request):
     })
 
 def entry(request, title):
-    md_content = util.get_entry(title)
-    if not md_content:
-        md_content = f'##**"{title}"** entry doesn\'t exist'
-    
+
+    entry_md_content = util.get_entry(title)
+    if not entry_md_content:
+        entry_md_content = f"##**{title}** entry doesn't exist"
     return render(request, "encyclopedia/entry.html", {
         "title": title,
-        "entry_html_content": markdown(md_content)
+        "entry_html_content": markdown(entry_md_content)
     })
 
