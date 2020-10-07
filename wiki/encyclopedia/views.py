@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from markdown2 import markdown
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 
 from . import util
 
