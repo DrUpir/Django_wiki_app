@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>There will be form to titile, md, and submit</h1>
+    {% comment %} <h1>There will be form to titile, md, and submit</h1> {% endcomment %}
     <form action = "{% url 'create' %}" method = "post">
         {% csrf_token %}
         {{ form }}
