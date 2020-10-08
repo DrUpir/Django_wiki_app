@@ -2,14 +2,17 @@ from django.shortcuts import render
 from markdown2 import markdown
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
+import logging # import the logging library
+from django import forms
 
 from . import util
 
-# import the logging library
-import logging
-
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+class CreateNew_Form (forms.Form):
+    title = forms.CharField(label = "Title")
+    # MD = 
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -52,5 +55,9 @@ def search(request):
     return render(request, "encyclopedia/error.html", {
         "error_string":  f"can't find \"{search_string}\""
     })
-    # return HttpResponseNotFound('<h1>Error in search view</h1>')
+
+def create(request):
+    return render(request, "encyclopedia/create.html", {
+        'form': CreateNew_Form()
+    })
    
