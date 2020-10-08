@@ -18,8 +18,12 @@ def index(request):
 
 def entry(request, title):
     entry_md_content = util.get_entry(title)
+
     if not entry_md_content:
-        entry_md_content = f"##**{title}** entry doesn't exist"
+        return render(request, "encyclopedia/error.html", {
+            "error_string":  f"\"{title}\" entry doesn't exist"
+        })
+
     return render(request, "encyclopedia/entry.html", {
         "title": title,
         "entry_html_content": markdown(entry_md_content)
@@ -34,10 +38,10 @@ def search(request):
             list_all_entries = util.get_list_entries()
             logger.error(f"list_all_entries = {list_all_entries}")
 
-            if search_string in list_all_entries:
-                return HttpResponseRedirect(reverse("entry", kwargs={'title': request.GET.get("q")}))
+            if [s for s in list_all_entries if search_string.lower() == s.lower()]:
+                return HttpResponseRedirect(reverse("entry", kwargs={'title': search_string}))
 
-            list_finded_entrys = [title for title in list_all_entries if search_string.lower() in title.lower()]
+            list_finded_entrys = [s for s in list_all_entries if search_string.lower() in s.lower()]
             logger.error(f"list_finded_entrys = {list_finded_entrys}")
 
             if list_finded_entrys:
@@ -45,5 +49,8 @@ def search(request):
                     "entries": list_finded_entrys    
                 })
 
-    return HttpResponseNotFound('<h1>Error in search view</h1>')
+    return render(request, "encyclopedia/error.html", {
+        "error_string":  f"can't find \"{search_string}\""
+    })
+    # return HttpResponseNotFound('<h1>Error in search view</h1>')
    
