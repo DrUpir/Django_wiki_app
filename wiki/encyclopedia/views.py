@@ -60,11 +60,10 @@ def create(request):
     if request.method == "POST":
         form = CreateNew_Form(request.POST)
         
-        # if not valid form fields - return error
 
-        logger.error(f"form.cleaned_data {form.cleaned_data}")
         logger.error(f"form.is_valid() = {form.is_valid()}")
 
+        # if not valid form fields - return error
         if not form.is_valid():
             return render(request, "encyclopedia/create.html", {
                     'form': form,
@@ -72,6 +71,8 @@ def create(request):
                 })
             
         title = form.cleaned_data["title"]
+        
+        logger.error(f"form.cleaned_data {form.cleaned_data}")
 
         # if entry allready exist return error
         # Error will display on the same page to avoid data lost
