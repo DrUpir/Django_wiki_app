@@ -62,11 +62,9 @@ def create(request):
         if form.is_valid():
             
             title = form.cleaned_data["title"]
-            # if entry allready exist return error on same page
+            # if entry allready exist return error
+            # Error will display on the same page to avoid data lost
             if util.get_entry(title):
-                # return render(request, "encyclopedia/error.html", {
-                #     "error_string":  f"Error: Entry with title \"{title}\" already exist"
-                # })
                 return render(request, "encyclopedia/create.html", {
                     'form': form,
                     'error_string': f"Error: Entry with title \"{title}\" already exist"
@@ -76,7 +74,7 @@ def create(request):
             pass
 
         return render(request, "encyclopedia/error.html", {
-            "error_string":  f"Error: whith processing POST request"
+            "error_string":  f"Error: with processing POST request"
         })
 
     return render(request, "encyclopedia/create.html", {
