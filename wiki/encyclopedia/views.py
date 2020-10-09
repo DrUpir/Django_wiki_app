@@ -24,7 +24,7 @@ def entry(request, title):
 
     if not entry_md_content:
         return render(request, "encyclopedia/error.html", {
-            "error_string":  f"\"{title}\" entry doesn't exist"
+            "error_string":  f"Error: \"{title}\" entry doesn't exist"
         })
 
     return render(request, "encyclopedia/entry.html", {
@@ -53,20 +53,30 @@ def search(request):
                 })
 
     return render(request, "encyclopedia/error.html", {
-        "error_string":  f"can't find \"{search_string}\""
+        "error_string":  f"Error: can't find \"{search_string}\""
     })
 
 def create(request):
     if request.method == "POST":
         form = CreateNew_Form(request.POST)
         if form.is_valid():
-            # check for existed title in entries
+            
+            title = form.cleaned_data["title"]
+            # if entry allready exist return error on same page
+            if util.get_entry(title):
+                # return render(request, "encyclopedia/error.html", {
+                #     "error_string":  f"Error: Entry with title \"{title}\" already exist"
+                # })
+                return render(request, "encyclopedia/create.html", {
+                    'form': form,
+                    'error_string': f"Error: Entry with title \"{title}\" already exist"
+                })
             # check for correct MD format
             #util.save_entry(r)
             pass
 
         return render(request, "encyclopedia/error.html", {
-            "error_string":  f"Error with POST create new entry"
+            "error_string":  f"Error: whith processing POST request"
         })
 
     return render(request, "encyclopedia/create.html", {
