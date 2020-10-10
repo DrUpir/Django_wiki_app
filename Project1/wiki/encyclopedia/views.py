@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class CreateNew_Form (forms.Form):
     title = forms.CharField(label = "Title")
-    MD = forms.CharField(widget = forms.Textarea)
+    md_content = forms.CharField(widget = forms.Textarea)
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -61,7 +61,7 @@ def create(request):
         form = CreateNew_Form(request.POST)
         
 
-        logger.error(f"form.is_valid() = {form.is_valid()}")
+        # logger.error(f"form.is_valid() = {form.is_valid()}")
 
         # if not valid form fields - return error
         if not form.is_valid():
@@ -71,8 +71,9 @@ def create(request):
                 })
             
         title = form.cleaned_data["title"]
+        md_content = form.cleaned_data["md_content"]
         
-        logger.error(f"form.cleaned_data {form.cleaned_data}")
+        # logger.error(f"form.cleaned_data {form.cleaned_data}")
 
         # if entry allready exist return error
         # Error will display on the same page to avoid data lost
@@ -83,12 +84,13 @@ def create(request):
             })
 
         #check for correct MD format
-        #util.save_entry(r)
+        util.save_entry(title, md_content)
+        return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
 
 
-        return render(request, "encyclopedia/error.html", {
-            "error_string":  f"WHILE I DON'T SEE LOGGING ERROR IN CONSOLE Error: with processing POST request"
-        })
+        # return render(request, "encyclopedia/error.html", {
+        #     "error_string":  f"WHILE I DON'T SEE LOGGING ERROR IN CONSOLE Error: with processing POST request"
+        # })
 
     return render(request, "encyclopedia/create.html", {
         'form': CreateNew_Form()
