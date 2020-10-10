@@ -60,8 +60,7 @@ def create(request):
     if request.method == "POST":
         form = CreateNew_Form(request.POST)
         
-
-        # logger.error(f"form.is_valid() = {form.is_valid()}")
+        logger.error(f"form.is_valid() = {form.is_valid()}")
 
         # if not valid form fields - return error
         if not form.is_valid():
@@ -73,7 +72,7 @@ def create(request):
         title = form.cleaned_data["title"]
         md_content = form.cleaned_data["md_content"]
         
-        # logger.error(f"form.cleaned_data {form.cleaned_data}")
+        logger.error(f"form.cleaned_data {form.cleaned_data}")
 
         # if entry allready exist return error
         # Error will display on the same page to avoid data lost
@@ -87,12 +86,20 @@ def create(request):
         util.save_entry(title, md_content)
         return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
 
-
-        # return render(request, "encyclopedia/error.html", {
-        #     "error_string":  f"WHILE I DON'T SEE LOGGING ERROR IN CONSOLE Error: with processing POST request"
-        # })
-
     return render(request, "encyclopedia/create.html", {
         'form': CreateNew_Form()
+    })
+
+def edit(request, title):
+    form = CreateNew_Form(initial={
+        'title': title,
+        'md_content': util.get_entry(title)
+        })
+
+    #this I will prefill form with title & util.get_entry(title)
+
+    return render(request, "encyclopedia/edit.html", {
+        'title': title,
+        'form': form
     })
    
