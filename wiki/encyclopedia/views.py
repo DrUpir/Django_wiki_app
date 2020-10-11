@@ -91,12 +91,29 @@ def create(request):
     })
 
 def edit(request, title):
+    
+    if request.method == "POST":
+        form = CreateNew_Form(request.POST)
+
+
+        if not form.is_valid():
+            return render(request, "encyclopedia/edit.html", {
+                'title': title,
+                'form': form,
+                'error_string': f"Error: invalid fields of form"
+            })
+
+        # logger.error(f"form.cleaned_data = {form.cleaned_data}")
+        title = form.cleaned_data.get('title')
+        md_content = form.cleaned_data.get('md_content')
+
+        util.save_entry(title, md_content)
+        return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
+    
     form = CreateNew_Form(initial={
         'title': title,
         'md_content': util.get_entry(title)
         })
-
-    #this I will prefill form with title & util.get_entry(title)
 
     return render(request, "encyclopedia/edit.html", {
         'title': title,

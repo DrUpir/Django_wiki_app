@@ -5,5 +5,10 @@
 {% endblock title %}
 
 {% block body %}
-    {{ form }}
+    {% if error_string %}<h1>{{ error_string }}</h1>{% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" name="OK">
+    </form>
 {% endblock body %}
