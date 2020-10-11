@@ -2,8 +2,9 @@ from django.shortcuts import render
 from markdown2 import markdown
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-import logging # import the logging library
+from random import randrange
 from django import forms
+import logging # import the logging library
 
 from . import util
 
@@ -42,7 +43,9 @@ def search(request):
             # logger.error(f"list_all_entries = {list_all_entries}")
 
             if [s for s in list_all_entries if search_string.lower() == s.lower()]:
-                return HttpResponseRedirect(reverse("entry", kwargs={'title': search_string}))
+                return HttpResponseRedirect(reverse("entry", kwargs={
+                    'title': search_string
+                    }))
 
             list_finded_entrys = [s for s in list_all_entries if search_string.lower() in s.lower()]
             # logger.error(f"list_finded_entrys = {list_finded_entrys}")
@@ -108,7 +111,9 @@ def edit(request, title):
         md_content = form.cleaned_data.get('md_content')
 
         util.save_entry(title, md_content)
-        return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
+        return HttpResponseRedirect(reverse("entry", kwargs={
+            'title': title
+            }))
     
     form = CreateNew_Form(initial={
         'title': title,
@@ -119,4 +124,11 @@ def edit(request, title):
         'title': title,
         'form': form
     })
+
+def random(request):
+    entries = util.get_list_entries()
+
+    return HttpResponseRedirect(reverse("entry", kwargs={
+        'title': entries[randrange(len(entries))]
+        }))
    
