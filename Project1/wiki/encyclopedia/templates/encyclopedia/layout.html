@@ -13,7 +13,9 @@
             <div class="sidebar col-lg-2 col-md-3">
                 <h2>Wiki</h2>
                 <form action = "{% url 'search' %}" method="GET">
-                    <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
+                    <div>
+                        <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
+                    </div>
                 </form>
                 <div>
                     <a href="{% url 'index' %}">Home</a>
