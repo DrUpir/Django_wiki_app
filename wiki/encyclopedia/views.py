@@ -3,17 +3,13 @@ from markdown2 import markdown
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from random import randrange
-from django import forms
 import logging # import the logging library
 
 from . import util
+from . import forms
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
-class CreateNew_Form (forms.Form):
-    title = forms.CharField(label = "Title")
-    md_content = forms.CharField(widget = forms.Textarea)
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -61,7 +57,7 @@ def search(request):
 
 def create(request):
     if request.method == "POST":
-        form = CreateNew_Form(request.POST)
+        form = forms.CreateNew_Form(request.POST)
         
         logger.error(f"form.is_valid() = {form.is_valid()}")
 
@@ -90,13 +86,13 @@ def create(request):
         return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
 
     return render(request, "encyclopedia/create.html", {
-        'form': CreateNew_Form()
+        'form': forms.CreateNew_Form()
     })
 
 def edit(request, title):
     
     if request.method == "POST":
-        form = CreateNew_Form(request.POST)
+        form = forms.CreateNew_Form(request.POST)
 
 
         if not form.is_valid():
@@ -115,7 +111,7 @@ def edit(request, title):
             'title': title
             }))
     
-    form = CreateNew_Form(initial={
+    form = forms.CreateNew_Form(initial={
         'title': title,
         'md_content': util.get_entry(title)
         })
