@@ -57,7 +57,7 @@ def search(request):
 
 def create(request):
     if request.method == "POST":
-        form = forms.CreateNew_Form(request.POST)
+        form = forms.EditEntryForm(request.POST)
         
         logger.error(f"form.is_valid() = {form.is_valid()}")
 
@@ -86,13 +86,13 @@ def create(request):
         return HttpResponseRedirect(reverse("entry", kwargs={'title': title}))
 
     return render(request, "encyclopedia/create.html", {
-        'form': forms.CreateNew_Form()
+        'form': forms.EditEntryForm()
     })
 
 def edit(request, title):
     
     if request.method == "POST":
-        form = forms.CreateNew_Form(request.POST)
+        form = forms.EditEntryForm(request.POST)
 
 
         if not form.is_valid():
@@ -111,7 +111,7 @@ def edit(request, title):
             'title': title
             }))
     
-    form = forms.CreateNew_Form(initial={
+    form = forms.EditEntryForm(initial={
         'title': title,
         'md_content': util.get_entry(title)
         })
